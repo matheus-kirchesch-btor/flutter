@@ -418,7 +418,7 @@ void main() {
           NavigationDrawerDestination(
             icon: Icon(Icons.accessible),
             label: Text('Accessible'),
-            disabled: true,
+            enabled: false,
           ),
         ],
         onDestinationSelected: (int i) {
