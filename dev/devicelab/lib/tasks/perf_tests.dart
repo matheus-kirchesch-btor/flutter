@@ -308,6 +308,13 @@ TaskFunction createTextfieldPerfE2ETest() {
   ).run;
 }
 
+TaskFunction createVeryLongPictureScrollingPerfE2ETest({required bool enableImpeller}) {
+  return PerfTest.e2e(
+    '${flutterDirectory.path}/dev/benchmarks/macrobenchmarks',
+    'test/very_long_picture_scrolling_perf_e2e.dart',
+    enableImpeller: enableImpeller,
+  ).run;
+}
 TaskFunction createSlidersPerfTest() {
   return PerfTest(
     '${flutterDirectory.path}/dev/benchmarks/macrobenchmarks',
@@ -672,6 +679,56 @@ TaskFunction createDrawPointsPerfTest({
   ).run;
 }
 
+TaskFunction createDrawAtlasPerfTest({
+  bool? forceOpenGLES,
+}) {
+  return PerfTest(
+    '${flutterDirectory.path}/dev/benchmarks/macrobenchmarks',
+    'test_driver/run_app.dart',
+    'draw_atlas_perf',
+    enableImpeller: true,
+    testDriver: 'test_driver/draw_atlas_perf_test.dart',
+    saveTraceFile: true,
+    forceOpenGLES: forceOpenGLES,
+  ).run;
+}
+
+TaskFunction createDrawVerticesPerfTest({
+  bool? forceOpenGLES,
+}) {
+  return PerfTest(
+    '${flutterDirectory.path}/dev/benchmarks/macrobenchmarks',
+    'test_driver/run_app.dart',
+    'draw_vertices_perf',
+    enableImpeller: true,
+    testDriver: 'test_driver/draw_vertices_perf_test.dart',
+    saveTraceFile: true,
+    forceOpenGLES: forceOpenGLES,
+  ).run;
+}
+
+TaskFunction createPathTessellationStaticPerfTest() {
+  return PerfTest(
+    '${flutterDirectory.path}/dev/benchmarks/macrobenchmarks',
+    'test_driver/run_app.dart',
+    'tessellation_perf_static',
+    enableImpeller: true,
+    testDriver: 'test_driver/path_tessellation_static_perf_test.dart',
+    saveTraceFile: true,
+  ).run;
+}
+
+TaskFunction createPathTessellationDynamicPerfTest() {
+  return PerfTest(
+    '${flutterDirectory.path}/dev/benchmarks/macrobenchmarks',
+    'test_driver/run_app.dart',
+    'tessellation_perf_dynamic',
+    enableImpeller: true,
+    testDriver: 'test_driver/path_tessellation_dynamic_perf_test.dart',
+    saveTraceFile: true,
+  ).run;
+}
+
 TaskFunction createAnimatedComplexOpacityPerfE2ETest({
   bool? enableImpeller,
 }) {
@@ -844,6 +901,7 @@ class StartupTest {
             testDirectory,
             'build',
             'windows',
+            'x64',
             'runner',
             'Profile',
             '$basename.exe'
@@ -1169,6 +1227,7 @@ class PerfTest {
       await selectedDevice.unlock();
       final String deviceId = selectedDevice.deviceId;
       final String? localEngine = localEngineFromEnv;
+      final String? localEngineHost = localEngineHostFromEnv;
       final String? localEngineSrcPath = localEngineSrcPathFromEnv;
 
       Future<void> Function()? manifestReset;
@@ -1181,6 +1240,10 @@ class PerfTest {
       try {
         final List<String> options = <String>[
           if (localEngine != null) ...<String>['--local-engine', localEngine],
+          if (localEngineHost != null) ...<String>[
+            '--local-engine-host',
+            localEngineHost
+          ],
           if (localEngineSrcPath != null) ...<String>[
             '--local-engine-src-path',
             localEngineSrcPath
@@ -1590,6 +1653,7 @@ class CompileTest {
           cwd,
           'build',
           'windows',
+          'x64',
           'runner',
           'release',
           '$basename.exe');
